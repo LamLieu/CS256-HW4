@@ -53,10 +53,10 @@ public:
 
 class PoliceOfficer {
 	/*
-	– To know the police officer’s name and badge number
-	– To examine a ParkedCar object and a ParkingMeter object, and determine
+	â€“ To know the police officerâ€™s name and badge number
+	â€“ To examine a ParkedCar object and a ParkingMeter object, and determine
 	whether the car's time has expired
-	– To issue a parking ticket (generate a ParkingTicket object) if the car’s time has
+	â€“ To issue a parking ticket (generate a ParkingTicket object) if the carâ€™s time has
 	expired
 	*/
 private:
