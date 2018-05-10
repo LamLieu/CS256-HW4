@@ -4,9 +4,22 @@
 #include <iostream>
 using namespace std;
 
-ParkedCar::ParkedCar(const string carMake, const string carModel, const string carColor, 
-	const string carLicenseNumber, const int numberOfMinutesParked) {
+// ParkedCar default constructor
+ParkedCar::ParkedCar() {
 
+	cout << "What is the make of the car?" << endl << "-->";
+	cin >> carMake;
+	cout << "What is the model of the car?" << endl << "-->";
+	cin >> carModel;
+	cout << "What is the color of the car?" << endl << "-->";
+	cin >> carColor;
+	cout << "What is the license number of the car?" << endl << "-->";
+	cin >> carLicenseNumber;
+	cout << "How many minutes was the car been parked?" << endl << "-->";
+	cin >> numberOfMinutesParked;
+}
+
+ParkedCar::ParkedCar(string carMake, string carModel, string carColor, string carLicenseNumber, int numberOfMinutesParked) {
 	this->carMake = carMake;
 	this->carModel = carModel;
 	this->carColor = carColor;
@@ -14,80 +27,76 @@ ParkedCar::ParkedCar(const string carMake, const string carModel, const string c
 	this->numberOfMinutesParked = numberOfMinutesParked;
 }
 
+// ParkedCar getters
 string & ParkedCar::getCarMake() { return carMake; }
 string & ParkedCar::getCarModel() { return carModel; }
 string & ParkedCar::getCarColor() { return carColor; }
 string & ParkedCar::getCarLicenseNumber() { return carLicenseNumber; }
 int ParkedCar::getNumberOfMinutesParked() { return numberOfMinutesParked; }
 
-void ParkedCar::setCarMake(string carMake) {
-	this->carMake = carMake;
-}
-void ParkedCar::setCarModel(string carModel) {
-	this->carModel = carModel;
-}
-void ParkedCar::setCarColor(string carColor) {
-	this->carColor = carColor;
-}
-void ParkedCar::setCarLicenseNumber(string carLicenseNumber) {
-	this->carLicenseNumber = carLicenseNumber;
-}
-
-void ParkedCar::setNumberOfMinutesParked(int numOfMinutesParked) {
-	this->numberOfMinutesParked = numOfMinutesParked;
-}
-
-ParkingMeter::ParkingMeter(const ParkingMeter &meter) 
-	: ParkedCar(meter.getCarMake(), meter.getCarModel(), meter.getCarColor(), meter.getCarLicenseNumber, meter.getNumberOfMinutesParked) {
+// ParkingMeter copy constructor
+ParkingMeter::ParkingMeter(ParkingMeter &meter) 
+	: ParkedCar(meter.getCarMake(), meter.getCarModel(), meter.getCarColor(), 
+		meter.getCarLicenseNumber(), meter.getNumberOfMinutesParked()) {
 	cout << "Parking Meter copied!" << endl;
 }
 
-ParkingMeter::ParkingMeter(const string carMake, const string carModel, const string carColor, 
-	const string carLicenseNumber, const int numOfMinutesParked)
-	: ParkedCar(carMake, carModel, carColor, carLicenseNumber, numOfMinutesParked) {
-	cout << "How much parking time (minutes) has been purchased?";
+// ParkingMeter constructor
+ParkingMeter::ParkingMeter() : ParkedCar() {
+	cout << "How much parking time (minutes) has been purchased?" << endl << "-->";
 	cin >> numberOfMinutesPurchased;
 }
 
-ParkingTicket::ParkingTicket(const ParkingMeter &meter, const PoliceOfficer &officer) 
-	: ParkingMeter(meter), PoliceOfficer(officer) {
-	carMake = meter.carMake;
-	carModel = meter.carModel;
-	carColor = meter.carColor;
-	carLicenseNumber = meter.carLicenseNumber;
-	numberOfMinutesParked = meter.numberOfMinutesParked;
-	numberOfMinutesPurchased = meter.numberOfMinutesPurchased;
+// ParkingTicket constructor
+ParkingTicket::ParkingTicket(ParkingMeter &meter, PoliceOfficer &officer) {
+	calculateFine(meter);
 
-	firstName = officer.firstName;
-	lastName = officer.lastName;
-	badgeNumber = officer.badgeNumber;
+	cout << "\t\t Parking Ticket" << endl;
+
+	cout << endl << "\t\tCar Information" << endl;
+	cout << "\t------------------------------" << endl;
+	cout << "\tCar Make: " << meter.carMake << endl;
+	cout << "\tCar Model: " << meter.carModel << endl;
+	cout << "\tCar Color: " << meter.carColor << endl;
+	cout << "\tLicense Number: " << meter.carLicenseNumber << endl << endl;
+
+	cout << "\tFine: " << getTotalFine() << endl << endl;
+
+	cout << "\t\tOfficer Information" << endl;
+	cout << "\t------------------------------" << endl;
+	cout << "\tOfficer Name: " << officer.firstName << " " << officer.lastName << endl;
+	cout << "\tOfficer Badge Number: " << officer.badgeNumber << endl << endl;
 }
 
-void ParkingTicket::calculateFine() {
-	if (numberOfMinutesParked > numberOfMinutesPurchased) {
-		totalFine = firstHourFine + (additionalHourFine * numberOfMinutesParked - numberOfMinutesPurchased);
+void ParkingTicket::calculateFine(ParkingMeter &meter) {
+	if (meter.numberOfMinutesParked > meter.numberOfMinutesPurchased) {
+		totalFine = firstHourFine + (additionalHourFine * ((meter.numberOfMinutesParked - meter.numberOfMinutesPurchased)/60));
 	}
 }
 
 double ParkingTicket::getTotalFine() { return totalFine; }
 
-PoliceOfficer::PoliceOfficer(const string f_name, const string l_name, const string badgeNumber) {
-	firstName = f_name;
-	lastName = l_name;
-	this->badgeNumber = badgeNumber;
+// PoliceOfficer constructor
+PoliceOfficer::PoliceOfficer() {
+	cout << "What is the officer's first name and last name?" << endl << "-->";
+	cin >> firstName >> lastName;
+	cout << "What is the officer's badge number?" << endl << "-->";
+	cin >> badgeNumber;
 }
 
+// PoliceOfficer copy constructor
 PoliceOfficer::PoliceOfficer(const PoliceOfficer &officer) {
 	firstName = officer.firstName;
 	lastName = officer.lastName;
 	badgeNumber = officer.badgeNumber;
 }
 
+// PoliceOfficer getters
 string & PoliceOfficer::getOfficerFirstName() { return firstName; }
 string & PoliceOfficer::getOfficerLastName() { return lastName; }
 string & PoliceOfficer::getOfficerBadgeNumber() { return badgeNumber; }
 
-bool PoliceOfficer::checkIfTimeExpired(ParkingMeter &meter) {
+bool PoliceOfficer::checkIfTimeExpired(const ParkingMeter &meter) {
 	if (meter.numberOfMinutesParked > meter.numberOfMinutesPurchased) {
 		return true;
 	}
@@ -96,6 +105,7 @@ bool PoliceOfficer::checkIfTimeExpired(ParkingMeter &meter) {
 	}
 }
 
-void PoliceOfficer::issueParkingTicket() { 
-	ParkingTicket ticket(ParkingMeter &meter);
+// Generates ParkingTicket
+void PoliceOfficer::issueParkingTicket(ParkingMeter &meter, PoliceOfficer &officer) { 
+	ParkingTicket ticket(meter, officer);
 }

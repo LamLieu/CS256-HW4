@@ -8,22 +8,15 @@ class ParkedCar {
 private:
 	string carMake, carModel, carColor, carLicenseNumber;
 	int numberOfMinutesParked;
-	ParkedCar() {};
 protected:
-	ParkedCar(const string carMake, const string carModel, const string carColor, 
-		const string carLicenseNumber, const int numberOfMinutesParked);
+	ParkedCar();
 public:
+	ParkedCar(string carMake, string carModel, string carColor, string carLicenseNumber, int numberOfMinutesParked);
 	string & getCarMake();
 	string & getCarModel();
 	string & getCarColor();
 	string & getCarLicenseNumber();
 	int getNumberOfMinutesParked();
-
-	void setCarMake(string carMake);
-	void setCarModel(string carModel);
-	void setCarColor(string carColor);
-	void setCarLicenseNumber(string carLicenseNumber);
-	void setNumberOfMinutesParked(int numberOfMinutesParked);
 
 	friend class PoliceOfficer;
 	friend class ParkingTicket;
@@ -34,14 +27,13 @@ class ParkingMeter : public ParkedCar {
 private:
 	int numberOfMinutesPurchased;
 public:
-	ParkingMeter(const ParkingMeter &meter); //Copy constructor
-	ParkingMeter(const string carMake, const string carModel, const string carColor, 
-		const string carLicenseNumber, const int numOfMinutesParked);
+	ParkingMeter(ParkingMeter &meter); //Copy constructor
+	ParkingMeter();
 	friend class PoliceOfficer;
 	friend class ParkingTicket;
 };
 
-class ParkingTicket : public ParkingMeter, public PoliceOfficer {
+class ParkingTicket {
 /*To report the make, model, color, and license number of the illegally parked car
  To report the amount of the fine, which is $25 for the first hour or part of an
  hour that the car is illegally parked, plus $10 for every additional hour or part of
@@ -54,10 +46,9 @@ private:
 	double totalFine = 0;
 
 public:
-	ParkingTicket(const ParkingMeter &meter, const PoliceOfficer &officer);
-	void calculateFine();
+	ParkingTicket(ParkingMeter &meter, PoliceOfficer &officer);
+	void calculateFine(ParkingMeter &meter);
 	double getTotalFine();
-	void print();
 };
 
 class PoliceOfficer {
@@ -71,15 +62,15 @@ class PoliceOfficer {
 private:
 	string firstName, lastName, badgeNumber;
 public:
-	PoliceOfficer(const string f_name, const string l_name, const string badgeNumber);
+	PoliceOfficer();
 	PoliceOfficer(const PoliceOfficer &officer);
 
 	string & getOfficerFirstName();
 	string & getOfficerLastName();
 	string & getOfficerBadgeNumber();
 
-	bool checkIfTimeExpired(ParkingMeter &meter);
-	void issueParkingTicket();
+	bool checkIfTimeExpired(const ParkingMeter &meter);
+	void issueParkingTicket(ParkingMeter &meter, PoliceOfficer &officer);
 
 	friend class ParkingTicket;
 };
